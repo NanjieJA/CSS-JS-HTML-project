@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="author" content="Gao Nanjie">
+    <meta name="description" content="Basic information of Hong Kong Industrial University">
+    <meta charset="utf-8">
+    <title>Hong Kong Industrial University's Aboutpage</title>
+    <style type="text/css" media="screen">
+        @import url("css/all.css");
+        @import url("css/apply.css");
+    </style>
+    <style type="text/css" media="print">
+        @import url("css/printApply.css");
+    </style>
+    <script>
+        window.onload = function apply() {
+            // 初始化表格，添加十行空数据
+            var tableBody = document.querySelector('tbody');
+            for (var i = 1; i <= 10; i++) {
+                addRowToTable("", "", i.toString());
+            }
+
+            var h1 = document.querySelector('.major-heading1');
+            var h2 = document.querySelector('.major-heading2');
+            var h3 = document.querySelector('.major-heading3');
+
+            // 模拟默认点击h1
+            clickh1();
+
+            h1.onclick = clickh1;
+            h2.onclick = clickh2;
+            h3.onclick = clickh3;
+
+            function clickh1() {
+                showCollege('College-of-Engineering');
+            }
+
+            function clickh2() {
+                showCollege('College-of-Science');
+            }
+
+            function clickh3() {
+                showCollege('College-of-Interdisciplinary-Studies');
+            }
+
+            function showCollege(college) {
+                document.querySelector('.College-of-Engineering').style.display = 'none';
+                document.querySelector('.College-of-Science').style.display = 'none';
+                document.querySelector('.College-of-Interdisciplinary-Studies').style.display = 'none';
+
+                document.querySelector('.' + college).style.display = 'block';
+
+                h1.style.backgroundColor = (college === 'College-of-Engineering') ? 'white' : '#f9ff40';
+                h2.style.backgroundColor = (college === 'College-of-Science') ? 'white' : '#f9ff40';
+                h3.style.backgroundColor = (college === 'College-of-Interdisciplinary-Studies') ? 'white' : '#f9ff40';
+            }
+            var submitButton = document.querySelector('.button-link [type="submit"]');
+            var resetButton = document.querySelector('.button-link [type="reset"]');
+            var tableBody = document.querySelector('tbody');
+
+            var lastChangeTimeElement = document.getElementById('lastChangeTime');
+
+            // 将 lastChangeTime 变量移动到函数外部以便全局访问
+            var lastChangeTime;
+
+            // 找到显示实时时间的元素
+            var lastChangeTimeElement = document.getElementById('lastChangeTime');
+
+            submitButton.onclick = function () {
+                handleSubmit();
+            };
+
+            resetButton.onclick = function () {
+                handleClear();
+            };
+
+            function handleSubmit() {
+
+
+                // 检查表格每行的 major 是否存在空
+                var emptyMajorRows = checkEmptyMajorRows();
+                if (emptyMajorRows.length > 0) {
+                    // 构建提示信息
+                    var missingMajors = emptyMajorRows.map(function (row) {
+                        var rank = row.querySelector('.rank').innerText;
+                        return 'your ' + rank + ' chosen major';
+                    });
+                    // 在 success-message 元素中显示提示信息
+                    var errorMessage = 'You have not chosen ' + missingMajors.join(', ') + ', you cannot leave any gap between your majors.';
+                    var successMessageElement = document.querySelector('.success-message');
+                    successMessageElement.innerText = errorMessage;
+                } else {
+                    // 计算成功插入的数据条数
+                    var insertedChoicesCount = calculateInsertedChoicesCount();
+                    // 更新成功插入的数据条数
+                    updateCompletedChoicesCount(insertedChoicesCount);
+                    // 获取当前时间
+                    var currentTime = getCurrentTime();
+                    // 显示成功提交消息
+                    var successMessageElement = document.querySelector('.success-message');
+                    successMessageElement.innerText = 'You have successfully submitted your application at time ' + currentTime;
+                }
+                // 获取当前时间
+                var currentTime = getCurrentTime();
+
+                // 更新 Last change time
+                lastChangeTime = currentTime;
+                updateLastChangeTime();
+                // 更新实时时间
+                function updateLastChangeTime() {
+                    lastChangeTimeElement.innerHTML = '<h2 id="lastChangeTime">Last change time: ' + lastChangeTime + '</h2>';
+                }
+            }
+
+
+
+
+
+            // 获取当前时间
+            function getCurrentTime() {
+                var now = new Date();
+                var formattedTime = formatDate(now);
+                return formattedTime;
+            }
+
+            // 检查表格每行的 major 是否存在空
+            function checkEmptyMajorRows() {
+                var emptyMajorRows = [];
+                var rows = tableBody.querySelectorAll('tr');
+
+                rows.forEach(function (row) {
+                    var major = row.querySelector('.major').innerText;
+                    if (major.trim() === "") {
+                        emptyMajorRows.push(row);
+                    }
+                });
+
+                return emptyMajorRows;
+            }
+            // 计算成功插入的数据条数
+            function calculateInsertedChoicesCount() {
+                var insertedChoicesCount = 0;
+                var rows = tableBody.querySelectorAll('tr');
+
+                rows.forEach(function (row) {
+                    var major = row.querySelector('.major').innerText;
+                    if (major !== "") {
+                        insertedChoicesCount++;
+                    }
+                });
+
+                return insertedChoicesCount;
+            }
+
+            // 更新成功插入的数据条数
+            function updateCompletedChoicesCount(count) {
+                var completedChoicesCountElement = document.getElementById('completedChoicesCount');
+                completedChoicesCountElement.innerText = 'Total number of completed choices: ' + count;
+            }
+            function handleClear() {
+                // 清空表格内容
+                tableBody.innerHTML = "";
+
+                // 重新添加十行空数据
+                for (var i = 1; i <= 10; i++) {
+                    addRowToTable("", "", i.toString());
+                }
+            }
+            var rankButtons = document.querySelectorAll('.button');
+
+            rankButtons.forEach(function (button) {
+                button.onclick = function () {
+                    handleRankChoice(button);
+                    // 在每次点击 "rank of choice" 按钮后更新显示成功插入的数据条数
+                    var insertedChoicesCount = calculateInsertedChoicesCount();
+                    updateCompletedChoicesCount(insertedChoicesCount);
+                };
+            });
+
+            function handleRankChoice(button) {
+                var collegeElement = button.closest('.College-of-Engineering, .College-of-Science, .College-of-Interdisciplinary-Studies');
+                var college = collegeElement.classList[0];
+
+                var majorInput = button.previousElementSibling;
+                var rank = majorInput.value.trim();
+
+                if (rank === "") {
+                    alert("Please enter a rank.");
+                    return;
+                }
+
+                if (!isValidRank(rank)) {
+                    alert("Please enter a valid rank between 1 and 10.");
+                    return;
+                }
+
+                var major = majorInput.name;
+
+                if (isMajorAlreadySelected(major)) {
+                    alert("This major is already selected.");
+                    return;
+                }
+
+                // 在表格中查找匹配的行
+                var existingRows = tableBody.querySelectorAll('tr');
+                var existingRow = findRowByRank(existingRows, rank);
+
+                if (existingRow) {
+                    // 如果找到匹配的行，检查该行的 Major 是否为空
+                    var existingMajor = existingRow.querySelector('.major').innerText;
+                    if (existingMajor !== "") {
+                        alert("This rank is already selected for the chosen college.");
+                    } else {
+                        // 更新该行的 College 和 Major
+                        updateRow(existingRow, college, major);
+                    }
+                } else {
+                    // 否则，插入新行
+                    addRowToTable(college, major, rank);
+                }
+
+                majorInput.value = "";
+            }
+
+            function findRowByRank(rows, rank) {
+                for (var i = 0; i < rows.length; i++) {
+                    var existingRank = parseInt(rows[i].querySelector('.rank').innerText, 10);
+                    if (existingRank === parseInt(rank, 10)) {
+                        return rows[i];
+                    }
+                }
+                return null;
+            }
+
+            function updateRow(row, college, major) {
+                // 更新找到的行的 College 和 Major
+                var collegeCell = row.querySelector('.college');
+                var majorCell = row.querySelector('.major');
+
+                collegeCell.innerText = college;
+                majorCell.innerText = major;
+            }
+
+            function isValidRank(rank) {
+                var parsedRank = parseInt(rank, 10);
+                return !isNaN(parsedRank) && parsedRank >= 1 && parsedRank <= 10;
+            }
+
+            function isMajorAlreadySelected(major) {
+                var existingRows = tableBody.querySelectorAll('tr');
+                for (var i = 0; i < existingRows.length; i++) {
+                    var existingMajor = existingRows[i].querySelector('.major').innerText;
+                    if (existingMajor === major) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function isRankAlreadySelected(college, major, rank) {
+                var existingRows = tableBody.querySelectorAll('tr');
+                for (var i = 0; i < existingRows.length; i++) {
+                    var existingCollege = existingRows[i].querySelector('.college').innerText;
+                    var existingMajor = existingRows[i].querySelector('.major').innerText;
+                    var existingRank = existingRows[i].querySelector('.rank').innerText;
+
+                    if (existingCollege === college && existingMajor === major && existingRank === rank) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function addRowToTable(college, major, rank) {
+                var newRow = document.createElement('tr');
+                var collegeCell = document.createElement('td');
+                collegeCell.innerText = college;
+                collegeCell.classList.add('college');
+                var majorCell = document.createElement('td');
+                majorCell.innerText = major;
+                majorCell.classList.add('major');
+                var rankCell = document.createElement('td');
+                rankCell.innerText = rank;
+                rankCell.classList.add('rank');
+
+                newRow.appendChild(collegeCell);
+                newRow.appendChild(majorCell);
+                newRow.appendChild(rankCell);
+
+                // 获取现有的行，然后根据 rank 的升序插入新的行
+                var existingRows = tableBody.querySelectorAll('tr');
+                var insertIndex = 0;
+
+                for (var i = 0; i < existingRows.length; i++) {
+                    var existingRank = parseInt(existingRows[i].querySelector('.rank').innerText, 10);
+                    if (existingRank > parseInt(rank, 10)) {
+                        break;
+                    }
+                    insertIndex++;
+                }
+
+                if (insertIndex < existingRows.length) {
+                    tableBody.insertBefore(newRow, existingRows[insertIndex]);
+                } else {
+                    tableBody.appendChild(newRow);
+                }
+            }
+
+            // 时间
+            // 找到显示实时时间的元素
+            var lastChangeTimeElement = document.querySelector('h2');
+
+            // 更新实时时间
+            function updateLastChangeTime() {
+                lastChangeTimeElement.innerText = 'Last change time: ' + formattedTime;
+            }
+
+            // 将日期格式化为指定格式（例如：2023/8/27 01:56:57）
+            function formatDate(date) {
+                var year = date.getFullYear();
+                var month = addZeroPrefix(date.getMonth() + 1);
+                var day = addZeroPrefix(date.getDate());
+                var hours = addZeroPrefix(date.getHours());
+                var minutes = addZeroPrefix(date.getMinutes());
+                var seconds = addZeroPrefix(date.getSeconds());
+
+                return year + '/' + month + '/' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+            }
+
+            // 在数字前面添加零（如果需要）
+            function addZeroPrefix(number) {
+                return number < 10 ? '0' + number : number;
+            }
+
+            // 初次加载页面时更新时间
+            updateLastChangeTime();
+
+            // 每秒更新一次时间
+            setInterval(updateLastChangeTime, 1000);
+
+
+        }
+    </script>
+</head>
+
+<body>
+    <header>
+        <img src="./image/logo.png" width="400" height="100" alt="The logo of HK Industrial University">
+        <h1>Hong Kong Industrial University</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="./Homepage.html">Home</a></li>
+            <li><a href="./About.html">About</a></li>
+            <li><a href="./Apply.html">Apply</a></li>
+            <li><a href="./Visit.html">Visit</a></li>
+            <li><a href="./Program.html">Program</a></li>
+            <li><a href="./Contact.html">Contact</a></li>
+        </ul>
+    </nav><br>
+    <h3>Welcome to HKIU</h3>
+
+    <h4 class="topic">Common Application to Undergraduate Program<br></h4>
+    <h4 class="major-heading1">College of Engineering</h4>
+    <h4 class="major-heading2">College of Science</h4>
+    <h4 class="major-heading3">College of Interdisciplinary Studies</h4>
+
+
+    <div class="College-of-Engineering">
+        <form method="get" action="#">
+            <img src="./image/cs.png" width="200" height="200" alt="the picture about cs"><br>
+            <label for="cs">BSc in Computer Science and Technology BSc in Computer Science and Technology</label><br>
+            <input class="input" type="text" id="cs" name="BSc in Computer Science and Technology">
+            <input class='button' type="button" value="rank of choice">
+        </form>
+
+        <form method="get" action="#">
+            <img src="./image/ei.png" width="200" height="200" alt="the picture about ei"><br>
+            <label for="ei">BEng in Electronic Information BEng in Electronic Information</label><br><br>
+            <input class="input" type="text" id="ei" name="eBEng in Electronic Information">
+            <input class='button' type="button" value="rank of choice">
+        </form>
+
+        <form method="get" action="#">
+            <img src="./image/mse.png" width="200" height="200" alt="the picture about mse"><br>
+            <label for="mse">BEng in Materials Science and Engineering BEng in Materials Science and Engineering
+            </label><br>
+            <input class="input" type="text" id="mse" name="BEng in Materials Science and Engineering">
+            <input class='button' type="button" value="rank of choice">
+        </form>
+
+        <form method="get" action="#">
+            <img src="./image/mc.png" width="200" height="200" alt="the picture about mc"><br>
+            <label for="mc">BEng in Materials and Chemicals BEng in Materials and Chemicals </label><br><br>
+            <input class="input" type="text" id="mc" name="BEng in Materials and Chemicals">
+            <input class='button' type="button" value="rank of choice">
+        </form>
+
+        <form method="get" action="#">
+            <img src="./image/est.png" width="200" height="200" alt="the picture about est"><br>
+            <label for="est">BSc in Electronic Science and Technology BSc in Electronic Science and Technology
+            </label><br>
+            <input class="input" type="text" id="est" name="eBSc in Electronic Science and Technology">
+            <input class='button' type="button" value="rank of choice">
+        </form>
+    </div>
+    <div class="College-of-Science">
+        <form method="get" action="#">
+            <img src="./image/phy.png" width="200" height="200" alt="the picture about phy"> <br>
+            <label for="phy">BSc in Physics BSc in Physics </label><br>
+            <input class="input" type="text" id="phy" name="BSc in Physics">
+            <input class='button' type="button" value="rank of choice">
+        </form>
+
+        <form method="get" action="#">
+            <img src="./image/chem.png" width="200" height="200" alt="the picture about chem"><br>
+            <label for="chem">BSc in Chemistry BSc in Chemistry </label><br>
+            <input class="input" type="text" id="chem" name="BSc in Chemistry">
+            <input class='button' type="button" value="rank of choice">
+        </form>
+
+        <form method="get" action="#">
+            <img src="./image/bio.png" width="200" height="200" alt="the picture about bio"><br>
+            <label for="bio">BSc in Biology BSc in Biology </label><br>
+            <input class="input" type="text" id="bio" name="BSc in Biology ">
+            <input class='button' type="button" value="rank of choice">
+        </form>
+    </div>
+    <div class="College-of-Interdisciplinary-Studies">
+        <form method="get" action="#">
+            <img src="./image/cogs.png" width="200" height="200" alt="the picture about cogs"><br>
+            <label for="cogs">BSc in Cognitive Science BSc in Cognitive Science </label><br>
+            <input class="input" type="text" id="cogs" name=" BSc in Cognitive Science">
+            <input class='button' type="button" value="rank of choice">
+        </form>
+
+        <form method="get" action="#">
+            <img src="./image/be.png" width="200" height="200" alt="the picture about be"> <br>
+            <label for="be">BEng in Biomedical Engineering BEng in Biomedical Engineering </label><br>
+            <input class="input" type="text" id="be" name="BEng in Biomedical Engineering">
+            <input class='button' type="button" value="rank of choice">
+        </form>
+
+        <form method="get" action="#">
+            <img src="./image/bm.png" width="200" height="200" alt="the picture about bm"> <br>
+            <label for="bm">BSc in Biology and Medicine BSc in Biology and Medicine </label><br>
+            <input class="input" type="text" id="bm" name="BSc in Biology and Medicine">
+            <input class='button' type="button" value="rank of choice">
+        </form>
+    </div>
+    <h1>Your chosen majors:</h1>
+    <h2 id="lastChangeTime" style="font-size: 16px;">Last change time:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>College</th>
+                <th>Major</th>
+                <th>rank</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <h2 id="completedChoicesCount">Total number of completed choices: 0</h2>
+    <a href="#" class="button-link"><input type="submit" value="submit"></a>
+    <a href="#" class="button-link"><input type="reset" value="clear"></a>
+    <p class="success-message" style="text-align: center; color: red;"></p>
+    <footer>
+        <img src="./image/footer_logo.png" width="300" height="100" alt="The footer logo of HK Industrial University">
+        <p>© CityU 2023 sources of images and text from Wikipedia Commons and Courtesy of Icon pack by Icons8 --
+            designed by <a href="./Design.html">Gao Nanjie</a></p>
+    </footer>
+</body>
+
+</html>

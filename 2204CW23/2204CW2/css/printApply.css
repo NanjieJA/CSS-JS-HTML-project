@@ -1,0 +1,32 @@
+@media print{
+    nav,h3,h4,div{
+        display: none;
+    }
+    header>img{
+        display: block;
+        margin: 0 auto;
+        
+    }
+    header>h1{
+        text-align: center;
+        color: rgb(188, 187, 187);
+    }
+    table{
+        width:100%
+    }
+    table,th,td{
+        border-width: 1px;
+        border-style: solid;
+        border-color: black; 
+        border-collapse: collapse;
+        text-align: left;
+    }
+    tr>th{
+        color: rgb(188, 187, 187);
+    }
+    footer {
+        text-align:center ;
+        clear: both;
+        color: rgb(188, 187, 187);
+    }
+}

@@ -1,0 +1,48 @@
+.text{
+    display: block;
+    width: 100%;
+    text-align: center;
+    clear: both;
+}
+div img{
+    display: block;
+    width: 50%;
+    float: left;
+}
+div h2{
+    float: right;
+    width: 50%;
+    text-align: center;
+
+}
+div dl{
+    display: block;
+    float: right;
+    width: 40%;
+}
+h3{
+    text-align: center;
+    clear: both;
+}
+
+form{
+    display: block;
+    margin: 0 auto;
+    width:50%
+}
+.date,.time{
+    position: relative;
+    left: 20%;
+}
+.no{
+    position: relative;
+    left: 10%;
+}
+.submit{
+    position: relative;
+    left: 25%;
+}
+.reset{
+    position: relative;
+    left: 30%;
+}

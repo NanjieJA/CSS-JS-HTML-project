@@ -1,0 +1,15 @@
+table{
+    clear: both;
+    margin: 0 auto;
+}
+thead{
+    background: -webkit-radial-gradient(ellipse,rgb(253, 115, 159),rgb(255, 187, 148));
+    color: white;
+}
+table,th,td{
+    border-width: 3px;
+    border-style: solid;
+    border-color: rgb(253, 115, 159); 
+    border-collapse: collapse;
+    text-align: center;
+}

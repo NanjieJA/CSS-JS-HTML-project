@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="author" content="Gao Nanjie" >
+        <meta name="description" content="Basic information of Hong Kong Industrial University" >
+        <meta charset="utf-8" >
+        <title>Hong Kong Industrial University's Homepage</title>
+        <style type="text/css" media="all">
+            @import url("css/all.css");
+            @import url("css/visit.css");
+        </style>
+        <script>
+            function reserve(date, time, no) {
+                /*
+                *data: the date of reservation
+                *time: the time of reservation
+                *no: the number of people, type: int
+                */
+                if (arguments.length != 3) {
+                    alert("incorrect arguments detected"); // this is not a good way to handle error, this alert should not be activated by your code
+                    return;
+                }
+                //an random int as the valid quota
+                let valid_quota = Math.floor(Math.random() * 2.0 * no);
+                if (no > valid_quota) return false // the quota is full
+                else return true; // the quota is not full
+            }
+            window.onload = function check() {
+                var form = document.querySelector('form');
+                var inputNo = document.querySelector('#NO');
+                var inputDate = document.querySelector('#Date');
+                var selectTime = document.querySelector('#Time');
+                var warning = document.querySelector('#warning');
+
+                form.addEventListener('submit', checkValid);
+
+                function checkValid(event) {
+                    event.preventDefault(); 
+
+                    if ((inputNo.value).length === 0 || (inputDate.value).length === 0 || (selectTime.value).length === 0) {
+                        warning.innerHTML = 'Data not completed; please re-enter';
+                    } 
+                    else if (!Number.isInteger(Number(inputNo.value)) || Number(inputNo.value) < 1) {
+                        warning.innerHTML = 'Please enter a valid number of people!';
+                    }
+                    else{
+                        if(reserve(inputDate.value,selectTime.value,inputNo.value)){
+                            alert("Your reservation is successful!");
+                        }
+                        else{
+                            alert("Sorry, the reservation is full!");
+                        }
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <header>
+            <img src="./image/logo.png" width="400" height="100" alt="The logo of HK Industrial University">
+            <h1>Hong Kong Industrial University</h1>
+        </header>
+            <nav>
+            <ul>
+                <li><a href="./Homepage.html">Home</a></li>
+                <li><a href="./About.html">About</a></li>
+                <li><a href="./Apply.html">Apply</a></li>
+                <li><a href="./Visit.html">Visit</a></li>
+                <li><a href="./Program.html">Program</a></li>
+                <li><a href="./Contact.html">Contact</a></li>
+            </ul>
+        </nav><br>
+        <div class="text">
+            <p>We warmly welcome you to visit us at our Kowloon campus and experience our vibrant learning community. Our campus is located in the Hong Kong Kowloon High-Tech Park, where we collaborate closely with institutes of the Chinese Academy of Sciences.</p>
+            <p>During your visit, you can explore our world-class facilities, including the Protein Folding Science Center, Hong Kong Advanced Computing Equipment, Hong Kong Ultrafast Laser Facility, Hong Kong Electron-Positron Collider, and Hong Kong Supercomputer Facility. These facilities are available to our faculty, students, and researchers worldwide.</p>
+            <p>You will also have the chance to meet our renowned scholars and experts from home and abroad committed to providing students with cutting-edge knowledge and skills in their respective fields. Our faculty members are recognized leaders in their fields, and their research has been published in prestigious journals such as Cell, Nature, and Science.</p>
+            <p>We hope you will come and visit us soon to experience firsthand the dynamic and innovative community at Hong Kong Industrial University.</p>
+        </div>
+        <div>
+            <h2>Location</h2>
+            <img src="./image/location.jpg" alt="The location of HKIU">
+            <dl>
+                <dt>Address:</dt>
+                <dd>Tat Chee Avenue, Kowloon, Hong Kong SAR</dd>
+                <dt>Tel:</dt>
+                <dd>(852) 1234 5678</dd>
+                <dt>Fax:</dt>
+                <dd>(852) 8765 4321</dd>
+                <dt>Email:</dt>
+                <dd>visit@hkiu.edu.hk</dd>
+            </dl>
+        </div>
+        <h3>Hong Kong Industrial University is having an open day on campus! Please make a reservation to visit our campus!</h3>
+        <div>
+            <form method="get" action="#">
+                <fieldset>
+                <legend>Booking information</legend>
+                <label class="date" for="vd">Date</label>
+                <input id='Date' class="date" type="date" id="vd" name="visiting date"><br>
+                <label class="time" for="select_time">Time</label>
+                <select id='Time'class="time" id="select_time" name="visiting time">
+                    <option value="9:00~10:00">9:00~10:00</option>
+                    <option value="10:00~11:00">10:00~11:00</option>
+                    <option value="11:00~12:00">11:00~12:00</option>
+                    <option value="14:00~15:00">14:00~15:00</option>
+                    <option value="15:00~16:00">15:00~16:00</option>
+                    <option value="16:00~17:00">16:00~17:00</option>
+                </select><br>
+                <label  class="no" for="NO.">No. of visitors</label>
+                <input class="no" type="text" id="NO" name="number of visitors"><br><br>
+                <p id="warning" style="color:red;text-align: center;"></p>
+                <input id='submit' class="submit" type="submit" value="Check Availability"> <input class="reset" type="reset" value="reset">
+                </fieldset>
+            </form>
+        </div>
+        <footer>
+           <img src="./image/footer_logo.png" width="300" height="100" alt="The footer logo of HK Industrial University">
+            <p>© CityU 2023 sources of images and text from Wikipedia Commons and Courtesy of Icon pack by Icons8 -- designed by <a href="./Design.html">Gao Nanjie</a></p>
+        </footer>
+
+    </body> 
+</html>   
